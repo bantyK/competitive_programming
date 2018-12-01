@@ -1,25 +1,27 @@
 
 //https://www.codechef.com/problems/HS08TEST
+
 import java.util.Scanner;
 
 class CodeChefBegineer2 {
 
-    static double printBalance(double accountBalance, double transactionAmount) {
-        if (transactionAmount % 5 != 0 || transactionAmount > accountBalance) {
+    static double printBalance(double accountBalance, int transactionAmount) {
+        double totalTransactionAmount = transactionAmount + 0.5;
+        if (transactionAmount % 5 != 0 || totalTransactionAmount > accountBalance) {
             return accountBalance;
         } else {
-            return accountBalance - (transactionAmount + 0.5);
+            return accountBalance - totalTransactionAmount;
         }
     }
 
     public static void main(String[] args) {
-        double accountBalance, transactionAmount;
+        double accountBalance;
+        int transactionAmount;
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        transactionAmount = Double.parseDouble(input.split(" ")[0]);
+        transactionAmount = Integer.parseInt(input.split(" ")[0]);
         accountBalance = Double.parseDouble(input.split(" ")[1]);
-
-        System.out.println(printBalance(accountBalance, transactionAmount));
+        System.out.printf("%.2f\n", printBalance(accountBalance, transactionAmount));
         scanner.close();
     }
 }
