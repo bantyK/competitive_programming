@@ -30,6 +30,7 @@ class EventSolution {
 
     static void getNumberOfDays(int minDays, int L, int R) {
         int start = getStart(minDays, L);
+        int originalStartValue = start; 
         int count = 0;
         while (start <= R) {
             count += 1;
@@ -42,7 +43,7 @@ class EventSolution {
         }
 
         if (count == 1) {
-            System.out.println(minDays);
+            System.out.println(originalStartValue);
         } else {
             System.out.println("impossible");
         }
