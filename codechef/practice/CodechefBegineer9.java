@@ -11,32 +11,45 @@ class CodechefBegineer9 {
         Position[] knightPositions;
         Position kingPosition;
         String line; // store space separated input for king and knight position
-        boolean inCheckMate = true;
+        boolean inCheckMate;
+        boolean kingInCheck;
         for (int i = 0; i < t; i++) {
+            inCheckMate = true;
+            kingInCheck = false;
             n = scanner.nextInt();
             scanner.nextLine();
             knightPositions = new Position[n];
             for (int j = 0; j < n; j++) {
                 line = scanner.nextLine();
-                knightPositions[j] = new Position(Long.parseLong(line.split(" ")[0]),
-                        Long.parseLong(line.split(" ")[1]));
+                knightPositions[j] = new Position(Integer.parseInt(line.split(" ")[0]),
+                        Integer.parseInt(line.split(" ")[1]));
             }
             // get the king position
             line = scanner.nextLine();
-            kingPosition = new Position(Long.parseLong(line.split(" ")[0]), Long.parseLong(line.split(" ")[1]));
+            kingPosition = new Position(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
 
             Set<Position> possibleKingPlaces = getKingPlaces(kingPosition);
             Set<Position> allKnightPlaces = getAllKnightPlaces(n, knightPositions);
 
-            for (Position kingPos : possibleKingPlaces) {
-                if (!allKnightPlaces.contains(kingPos)) {
-                    inCheckMate = false;
+            for (Position position : allKnightPlaces) {
+                if (position.equals(kingPosition)) {
+                    kingInCheck = true;
                     break;
                 }
             }
 
-            if (inCheckMate) {
-                System.out.println("YES");
+            if (kingInCheck) {
+                for (Position kingPos : possibleKingPlaces) {
+                    if (allKnightPlaces.contains(kingPos)) {
+                        inCheckMate = true;
+                        break;
+                    }
+                }
+                if (inCheckMate) {
+                    System.out.println("YES");
+                } else {
+                    System.out.println("NO");
+                }
             } else {
                 System.out.println("NO");
             }
@@ -47,7 +60,7 @@ class CodechefBegineer9 {
     // all the positions where all the knights can move
     private static Set<Position> getAllKnightPlaces(int numKnights, Position[] knightPositions) {
         Set<Position> allKnightPositions = new HashSet<>();
-        long x, y;
+        int x, y;
         for (int i = 0; i < numKnights; i++) {
             x = knightPositions[i].x;
             y = knightPositions[i].y;
@@ -58,7 +71,7 @@ class CodechefBegineer9 {
     }
 
     // returns all the position that a single knight can travel
-    private static Set<Position> getKnightPosition(long x, long y) {
+    private static Set<Position> getKnightPosition(int x, int y) {
         Set<Position> knightPosition = new HashSet<>();
         knightPosition.clear();
         knightPosition.add(new Position(x + 2, y + 1));
@@ -74,8 +87,8 @@ class CodechefBegineer9 {
 
     // returns the coordinates of places where the king can move
     private static Set<Position> getKingPlaces(Position kingPosition) {
-        long x = kingPosition.x;
-        long y = kingPosition.y;
+        int x = kingPosition.x;
+        int y = kingPosition.y;
         Set<Position> positionSet = new HashSet<>();
         positionSet.clear();
         positionSet.add(new Position(x + 1, y)); // right
@@ -92,10 +105,10 @@ class CodechefBegineer9 {
 }
 
 class Position {
-    long x;
-    long y;
+    int x;
+    int y;
 
-    Position(long x, long y) {
+    Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
