@@ -5,34 +5,51 @@ class TypingTime {
         Scanner scanner = new Scanner(System.in);
         int t = scanner.nextInt();
         scanner.nextLine();
-        String input;
-        for(int i = 0; i < t; i++) {
-            input = scanner.nextLine();
-            System.out.println(getTotalTime(input));
+        int n;
+        String[] words;
+        for (int i = 0; i < t; i++) {
+            n = scanner.nextInt();
+            scanner.nextLine();
+            words = new String[n];
+            for (int j = 0; j < n; j++) {
+                words[j] = scanner.nextLine();
+            }
+            System.out.println(getTotalTime(words));
         }
     }
 
-    static double getTotalTime(String word) {
-        double totalTime = 0;
+    static int getTotalTime(String[] words) {
+        int totalTimeTaken = 0;
+        int timeTakenForSingleWord;
+        Map<String, Integer> timeTaken = new HashMap<>();
+        for (String word : words) {
+            if (!timeTaken.containsKey(word)) {
+                timeTakenForSingleWord = timeForSingleWord(word);
+                timeTaken.put(word, timeTakenForSingleWord);
+                totalTimeTaken += timeTakenForSingleWord;
+            } else {
+                totalTimeTaken += timeTaken.get(word) / 2;
+            }
+        }
+        return totalTimeTaken;
+    }
+
+    static int timeForSingleWord(String word) {
+        double totalTime = 0.2;
         Map<Character, String> handsMap = getHandsMap();
         String currentHand = handsMap.get(word.charAt(0));
-        totalTime = 0.2;
-        for(int i = 1; i < word.length(); i++) {
+        for (int i = 1; i < word.length(); i++) {
             char currentChar = word.charAt(i);
-            double timeToAdd;
-            if(currentHand.equals(handsMap.get(currentChar))) {
+            if (currentHand.equals(handsMap.get(currentChar))) {
                 // same hand, add 0.4 sec
-                timeToAdd = 0.4;
+                totalTime += 0.4;
             } else {
                 // different hand, add 0.2 sec
-                timeToAdd = 0.2;
+                totalTime += 0.2;
             }
-            //check if this character already appeared, half the time it took before
-
-            totalTime += timeToAdd;
             currentHand = handsMap.get(currentChar);
         }
-        return totalTime;
+        return (int) totalTime * 10;
     }
 
     static Map<Character, String> getHandsMap() {
