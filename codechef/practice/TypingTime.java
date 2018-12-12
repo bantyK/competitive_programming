@@ -35,21 +35,21 @@ class TypingTime {
     }
 
     static int timeForSingleWord(String word) {
-        double totalTime = 0.2;
+        int totalTime = 2;
         Map<Character, String> handsMap = getHandsMap();
         String currentHand = handsMap.get(word.charAt(0));
         for (int i = 1; i < word.length(); i++) {
             char currentChar = word.charAt(i);
             if (currentHand.equals(handsMap.get(currentChar))) {
                 // same hand, add 0.4 sec
-                totalTime += 0.4;
+                totalTime += 4;
             } else {
                 // different hand, add 0.2 sec
-                totalTime += 0.2;
+                totalTime += 2;
             }
             currentHand = handsMap.get(currentChar);
         }
-        return (int) totalTime * 10;
+        return totalTime;
     }
 
     static Map<Character, String> getHandsMap() {
