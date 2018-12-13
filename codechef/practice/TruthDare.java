@@ -1,6 +1,7 @@
 
 //https://www.codechef.com/problems/TRUEDARE
-import java.util.*;
+
+import java.util.Scanner;
 
 class TruthDare {
     public static void main(String[] args) {
@@ -9,17 +10,16 @@ class TruthDare {
         scanner.nextLine();
         int tr, dr, ts, ds;
         String tss, dss, trs, drs;
-    
+
         for (int i = 0; i < t; i++) {
             tr = scanner.nextInt();
             scanner.nextLine();
             trs = scanner.nextLine();
-            
-            
+
             dr = scanner.nextInt();
             scanner.nextLine();
             drs = scanner.nextLine();
-            
+
             ts = scanner.nextInt();
             scanner.nextLine();
             tss = scanner.nextLine();
@@ -29,38 +29,24 @@ class TruthDare {
             dss = scanner.nextLine();
 
             // if there is a number present in tss which is not present in trs ||
-            // if there is any number present in dss which is not present in tss -> Shyam wins
-            //otherwise Ram wins
-            
-            System.out.println(ramWins(tss, dss, trs, drs));
-            
+            // if there is any number present in dss which is not present in tss -> Shyam
+            // wins
+            // otherwise Ram wins
+
+            System.out.println(ramWins(trs, drs, tss, dss));
+
         }
     }
 
-    static String ramWins(String tss, String dss, String trs, String drs) {
-        Set<String> truthTaskSet = new HashSet<>();
-        Set<String> dareTaskSet = new HashSet<>();
-
-        for (String s : trs.split(" ")) {
-            truthTaskSet.add(s);
-        }
-
-        for (String s : drs.split(" ")) {
-            dareTaskSet.add(s);
-        }
-
-        for (String s : tss.split(" ")) {
-            if (truthTaskSet.contains(s)) {
-                truthTaskSet.remove(s);
-            } else {
+    static String ramWins(String truthTaskRam, String dareTaskRam, String truthTaskShyam, String dareTaskShyam) {
+        for (String task : truthTaskShyam.split(" ")) {
+            if (!truthTaskRam.contains(task)) {
                 return "no";
             }
         }
 
-        for (String s : dss.split(" ")) {
-            if (dareTaskSet.contains(s)) {
-                dareTaskSet.remove(s);
-            } else {
+        for (String task : dareTaskShyam.split(" ")) {
+            if (!dareTaskRam.contains(task)) {
                 return "no";
             }
         }
