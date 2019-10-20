@@ -2,16 +2,17 @@ package solutions.medium;
 
 import models.TreeNode;
 
+//https://leetcode.com/problems/validate-binary-search-tree
 public class ValidBST {
     public static void main(String[] args) {
         ValidBST obj = new ValidBST();
 
         TreeNode root = new TreeNode(2147483647);
-//        root.left = new TreeNode(3);
-//        root.right = new TreeNode(6);
-//        root.left.left = new TreeNode(2);
-//        root.left.right = new TreeNode(4);
-//        root.left.left.left = new TreeNode(1);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(4);
+        root.left.left.left = new TreeNode(1);
 
         if (obj.isValidBST(root)) {
             System.out.println("Valid");
