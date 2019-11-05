@@ -3,6 +3,7 @@ package src;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://leetcode.com/problems/find-all-duplicates-in-an-array/
 public class XorTest {
     public static void main(String[] args) {
         XorTest obj = new XorTest();
