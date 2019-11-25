@@ -1,7 +1,6 @@
 package solutions.medium;
 
 import java.util.*;
-import java.util.stream.*;
 
 public class MinTicketCost {
     public static void main(String[] args) {
@@ -43,7 +42,6 @@ public class MinTicketCost {
                 dp[i] = dp[i - 1];
             }
         }
-
         return dp[lastDay];
     }
 }
