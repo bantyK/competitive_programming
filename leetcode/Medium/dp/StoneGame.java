@@ -20,7 +20,7 @@ public class StoneGame {
 
         int firstPlayerScore = helper(piles, 0, piles.length - 1, dp);
 
-        if (firstPlayerScore >= totalScore / 2) return true;
+        if (firstPlayerScore > totalScore / 2) return true;
         return false;
 
     }
