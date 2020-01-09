@@ -10,8 +10,34 @@ public class GenerateParenthesis {
 
         System.out.println(res);
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        helper(n, n, res, new StringBuilder());
+        return res;
+    }
 
+    private void helper(int open, int close, List<String> res, StringBuilder builder) {
+        String s = builder.toString();
+        if (open == close && open == 0) {
+            res.add(builder.toString());
+            return;
+        }
 
+        if (open > 0) {
+            builder.append("(");
+            helper(open - 1, close, res, builder);
+            builder.deleteCharAt(builder.length() - 1);
+
+        }
+        if (close > 0 && close > open) {
+            builder.append(")");
+            helper(open, close - 1, res, builder);
+            builder.deleteCharAt(builder.length() - 1);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public List<String> generateParenthesis(int n) {
         List<String> res = new ArrayList<>();
         recurse(n, n, res, "");
@@ -34,6 +60,7 @@ public class GenerateParenthesis {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Brute force
     public List<String> generateParenthesis2(int n) {
         Set<String> set = new HashSet<>();
