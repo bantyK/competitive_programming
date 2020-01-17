@@ -1,13 +1,11 @@
-package prefix;
-
 import java.util.*;
 
 // 560 https://leetcode.com/problems/subarray-sum-equals-k/
 public class SubarraySum {
     public static void main(String[] args) {
         SubarraySum obj = new SubarraySum();
-        int[] nums = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int k = 0;
+        int[] nums = {-1,-1,1,1,1};
+        int k = 2;
         System.out.println(obj.subarraySum2(nums, k));
     }
 
