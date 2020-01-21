@@ -11,6 +11,64 @@ public class NetworkDelayTime {
         System.out.println(res);
     }
 
+
+    /**
+        Djikstra's algorithm
+    */
+    public int networkDelayTime(int[][] times, int N, int K) {
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+        for(int[] time : times) {
+            addEdge(graph, time[0], time[1], time[2]);
+        }
+        
+        return djikstra(graph, N, K);
+    }
+    
+    private int djikstra(Map<Integer, List<int[]>> graph, int n, int src) {
+        boolean[] visited = new boolean[n + 1];
+        int[] distances = new int[n + 1];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        distances[0] = 0;
+        distances[src] = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[1] - b[1]);
+        pq.offer(new int[]{src, 0});
+        
+        while(!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int node = curr[0];
+            int distance = curr[1];
+            visited[node] = true;
+            
+            if(graph.containsKey(node)) {
+                for(int[] nei : graph.get(node)) {
+                    int nextNode = nei[0];
+                    int more = nei[1];
+                    int newDistance = distance + more;
+                    if(!visited[nextNode]) {
+                        if(newDistance < distances[nextNode]) {
+                            distances[nextNode] = newDistance;
+                            pq.offer(new int[]{nextNode, newDistance});    
+                        }
+                        
+                    }
+                }        
+            }
+        }
+        
+        int maxDistance = 0;
+        
+        for(int i = 1; i < distances.length; i++) {
+            maxDistance = Math.max(maxDistance, distances[i]);
+        }
+        
+        return maxDistance == Integer.MAX_VALUE ? -1 : maxDistance;
+    }
+    
+    private void addEdge(Map<Integer, List<int[]>> graph, int src, int dest, int dist) {
+        graph.putIfAbsent(src, new ArrayList<>());
+        graph.get(src).add(new int[]{dest, dist});
+    }
+
     /**
      * Extremely slow
      *
