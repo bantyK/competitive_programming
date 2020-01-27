@@ -14,25 +14,21 @@ public class Subsets2 {
 
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         Arrays.sort(nums);
-        Set<List<Integer>> subsets = new HashSet<>();
-        boolean[] visited = new boolean[nums.length];
-        generateSubsets(nums, subsets, new ArrayList<>(), 0, visited);
-        return new ArrayList<>(subsets);
+        List<List<Integer>> result = new ArrayList<>();
+        withDuplicates(nums, 0, new ArrayList<Integer>(), result);
+        return result;
     }
 
-    private void generateSubsets(int[] nums, Set<List<Integer>> subsets, List<Integer> current, int index, boolean[] visited) {
-        subsets.add(new ArrayList<>(current));
+    private void withDuplicates(int[] nums, int index, ArrayList<Integer> current, List<List<Integer>> result) {
+        result.add(new ArrayList<>(current));
 
-        if (index >= nums.length) return;
+        if(index >= nums.length) return;
 
-        for (int i = index; i < nums.length; i++) {
-            if(visited[i]) continue;
-
-            visited[i] = true;
+        for(int i = index; i < nums.length; i++) {
+            if(i > index && nums[i] == nums[i - 1]) continue;
             current.add(nums[i]);
-            generateSubsets(nums, subsets, current, i + 1, visited);
+            withDuplicates(nums, i + 1, current, result);
             current.remove(current.size() - 1);
-            visited[i] = false;
         }
     }
 
