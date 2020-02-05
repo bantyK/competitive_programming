@@ -2,6 +2,7 @@ package solutions.medium;
 
 import java.util.*;
 
+//983: https://leetcode.com/problems/minimum-cost-for-tickets/
 public class MinTicketCost {
     public static void main(String[] args) {
         MinTicketCost obj = new MinTicketCost();
@@ -9,6 +10,45 @@ public class MinTicketCost {
         int[] costs = new int[]{2, 7, 15};
         int minAmount = mincostTickets(days, costs);
         System.out.println(minAmount);
+
+    }
+
+    /**
+    * Improved version. Time 2ms
+    */
+    public int mincostTickets2(int[] days, int[] costs) {
+        int lastDay = days[days.length - 1];
+        int[] dp = new int[lastDay + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        Set<Integer> uniqueDays = new HashSet<>();
+        for (int day : days) uniqueDays.add(day);
+        int cost1 = 0, cost2 = 0, cost3 = 0;
+        for (int i = 1; i <= lastDay; i++) {
+            if (uniqueDays.contains(i)) {
+                if (i - 1 >= 0) {
+                    cost1 = dp[i - 1] + costs[0];
+                }
+
+                if (i - 7 >= 0) {
+                    cost2 = dp[i - 7] + costs[1];
+                } else {
+                    cost2 = dp[0] + costs[1];
+                }
+
+                if (i - 30 >= 0) {
+                    cost3 = dp[i - 30] + costs[2];
+                } else {
+                    cost3 = dp[0] + costs[2];
+                }
+
+                dp[i] = Math.min(Math.min(cost1, cost2), cost3);
+            } else {
+                dp[i] = dp[i - 1];
+            }
+        }
+
+        return dp[lastDay];
 
     }
 
