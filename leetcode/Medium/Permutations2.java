@@ -11,6 +11,45 @@ public class Permutations2 {
         }
     }
 
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length == 0) {
+            return res;
+        }
+        Arrays.sort(nums);
+        List<Integer> current = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        
+        permutations(nums, current, used, res);
+        
+        return res;
+    }
+    
+    private void permutations(int[] nums, List<Integer> current, boolean[] used, List<List<Integer>> res) {
+        if(current.size() == nums.length) {
+            res.add(new ArrayList<>(current));
+            return;
+        }
+        
+        for(int i = 0; i < nums.length; i++) {
+            if(used[i]) {
+                continue;
+            }
+            
+            if(i > 0 && nums[i] == nums[i -1] && !used[i -1]) continue;
+            
+            used[i] = true;
+            current.add(nums[i]);
+            permutations(nums, current, used, res);
+            used[i] = false;
+            current.remove(current.size() - 1);
+        }
+    }
+
+    /**
+    * Brute Force
+    */
     public List<List<Integer>> permuteUnique(int[] arr) {
         Set<List<Integer>> permutations = new HashSet<>();
         boolean[] visited = new boolean[arr.length];
