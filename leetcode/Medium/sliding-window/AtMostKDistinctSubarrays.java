@@ -5,9 +5,9 @@ import java.util.*;
 /**
  * Returns the number of sub-arrays which contains at-most K distinct elements.
  */
-public class AtMostKDistinct {
+public class AtMostKDistinctSubarrays {
     public static void main(String[] args) {
-        AtMostKDistinct obj = new AtMostKDistinct();
+        AtMostKDistinctSubarrays obj = new AtMostKDistinctSubarrays();
         final int count = obj.atmostKDistinct(new int[]{1, 2, 1, 2, 3}, 2);
         System.out.println(count);
     }
