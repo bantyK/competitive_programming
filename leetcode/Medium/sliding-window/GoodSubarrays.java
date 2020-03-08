@@ -77,6 +77,7 @@ public class GoodSubarrays {
 
             countMap.put(rightNum, countMap.getOrDefault(rightNum, 0) + 1);
 
+            //reset
             if (distinctCount > K) {
                 int startNum = A[start];
                 start++;
