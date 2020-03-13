@@ -13,31 +13,37 @@ public class ThreeSum {
     }
 
     public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+       
         List<List<Integer>> res = new ArrayList<>();
 
-        Arrays.sort(nums);
-        for (int i = 0; i < nums.length - 2; i++) {
-            if (i == 0 || nums[i] > nums[i - 1]) {
-                int left = i + 1;
-                int right = nums.length - 1;
-                while (left < right) {
-                    if (nums[left] + nums[right] + nums[i] == 0) {
-                        res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+        int target;
+        int left, right, sum, prevLeftVal, prevIVal;
+        for (int i = 0; i < nums.length-2; i++) {
+            target = -nums[i];
+            left = i + 1;
+            right = nums.length - 1;
+            prevIVal = nums[i];
+            while (left < right) {
+                sum = nums[left] + nums[right];
+                if (sum == target) {
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    prevLeftVal = nums[left];
+                    while(left < right && nums[left] == prevLeftVal) {
+                        left++;
                     }
-                    if (nums[left] + nums[right] + nums[i] < 0) {
-                        int currentLeft = left;
-                        while (nums[left] == nums[currentLeft] && left < right) {
-                            left++;
-                        }
-                    } else {
-                        int currentRight = right;
-                        while (nums[currentRight] == nums[right] && right >= left) {
-                            right--;
-                        }
-                    }
+                } else if(sum > target) {
+                    right--;
+                } else {
+                    left++;
                 }
             }
+            while(i < nums.length-1 && prevIVal == nums[i+1]) {
+                i++;
+            }
         }
+
         return res;
     }
+ 	   
 }
