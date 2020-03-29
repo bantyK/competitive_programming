@@ -1,31 +1,42 @@
 // 1381 https://leetcode.com/problems/design-a-stack-with-increment-operation/
+
 public class CustomStack {
-    int[] values;
-    int maxSize;
-    int topIndex;
+    private int top;
+    private int[] values;
+    private int[] inc;
+    private int size;
 
     public CustomStack(int maxSize) {
-        values = new int[maxSize];
-        this.maxSize = maxSize;
-        this.topIndex = -1;
+        this.size = maxSize;
+        inc = new int[size];
+        values = new int[size];
+        top = 0;
     }
 
-    public void push(int x) {
-        if (topIndex < maxSize - 1) {
-            values[++topIndex] = x;
+    public void push(int val) {
+        if (top < size) {
+            values[top++] = val;
+        }
+    }
+
+    public void increment(int k, int val) {
+        int i = Math.min(top, k) - 1;
+        if(i >= 0) {
+            inc[i] += val;
         }
     }
 
     public int pop() {
-        if (topIndex < 0) return -1;
+        if (top == 0) return -1;
+        int i = top - 1;
 
-        return values[topIndex--];
-    }
-
-    public void increment(int k, int val) {
-        int limit = Math.min(k, maxSize);
-        for (int i = 0; i < limit; i++) {
-            values[i] += val;
+        if (i > 0) {
+            inc[i - 1] += inc[i];
         }
+
+        int res = values[i] + inc[i];
+        inc[i] = 0;
+        top--;
+        return res;
     }
 }
