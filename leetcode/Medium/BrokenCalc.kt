@@ -1,10 +1,11 @@
 public class Solution {
-	fun brokenCalc(x : Int, y : Int): Int {
+	fun brokenCalc(X : Int, Y : Int): Int {
 		var steps: Int = 0
-		
+		var x = X
+		var y = Y
 		while(true) {
 			if(x >= y) {
-				break
+			    break
 			}
 
 			if(y % 2 == 0) y = y / 2
