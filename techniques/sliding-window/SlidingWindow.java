@@ -60,6 +60,7 @@ public class SlidingWindow {
 	}
 
 	// Dynamic size with auxiliary memory
+	// returns max length containing k distinct characters
 	private static int longestSubstringWithKDistinctChar(String s, int k) {
 		Map<Character, Integer> charFrequencyMap = new HashMap<>();	
 
@@ -87,6 +88,11 @@ public class SlidingWindow {
 		}
 		return maxSubstringLength;
 	}
+
+	// the number of substrings there are that contain at least k distinct characters
+	public long kDistinctCharacters(String s, int k) {
+		
+    }
 }
 
 
