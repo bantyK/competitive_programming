@@ -18,7 +18,10 @@ public class EditDistance {
 
 
     private int match2(String s1, String s2, int len1, int len2, Map<String, Integer> cache) {
-        if (len1 < 0) {
+        // len1 and len2 represent the last characters of string1 and string2.
+	// we will start our comparison from the end of both strings.
+ 
+	if (len1 < 0) {
             return len2 + 1;
         }
         if (len2 < 0) {
@@ -26,6 +29,7 @@ public class EditDistance {
         }
         String key = len1 + "" + len2;
 
+	// if we have already solved for the current values of len1 and len2, then we will have the solution stored in the cache. No need of any further calculation, simply return
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
@@ -49,6 +53,8 @@ public class EditDistance {
 
             res = 1 + Math.min(Math.min(insert, replace), delete);
         }
+
+	// before returning the result, store it in the cache so as to use it later.
 
         cache.put(key, res);
         return res;
