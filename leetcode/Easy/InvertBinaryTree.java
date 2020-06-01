@@ -32,4 +32,19 @@ public class InvertBinaryTree {
 
         return root;
     }
+    
+    // solution 2
+    public TreeNode invertTree2(TreeNode root) {
+        if(root == null) return null;
+        if(root.left == null && root.right == null) {
+            return root;
+        }
+        TreeNode invertedLeft = invertTree2(root.left);
+        TreeNode invertedRight = invertTree2(root.right);
+
+        root.right = invertedLeft;
+        root.left = invertedRight;
+
+        return root;
+    }
 }
