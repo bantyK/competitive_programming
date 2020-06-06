@@ -1,5 +1,6 @@
 import java.util.*;
 
+//992 https://leetcode.com/problems/subarrays-with-k-different-integers/
 public class SubarraysWithExactlyKDistinctNumbers {
     public static void main(String[] args) {
         SubarraysWithExactlyKDistinctNumbers obj = new SubarraysWithExactlyKDistinctNumbers();
