@@ -13,6 +13,36 @@ public class FriendCircle {
         System.out.println(set);
     }
 
+    // DFS
+    public int findCircleNumDFS(int[][] M) {
+        int n = M.length;
+        boolean[] visited = new boolean[n];
+        int group = 0;
+        
+        for(int i = 0; i < n; ++i) {
+            if(!visited[i]) {
+                visited[i] = true;
+                dfs(M, i, visited);
+                group++;
+            }
+        }
+        
+        return group;
+    }
+    
+    private void dfs(int[][] mat, int row, boolean[] visited) {
+        for(int col = 0; col < mat[row].length; ++col) {
+            if(mat[row][col] == 1 && !visited[col]) {
+                visited[col] = true;
+                dfs(mat, col, visited);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // Union find method
     public int findCircleNum(int[][] M) {
         DisjointSet set = new DisjointSet(M.length);
 
