@@ -20,36 +20,23 @@ public class KeysAndRoom {
     }
 
     public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        boolean[] roomsVisited = new boolean[rooms.size()];
-        roomsVisited[0] = true;
+        final int size = rooms.size();
+        boolean[] canEnterRoom = new boolean[size];
 
-        Queue<Integer> queue = new ArrayDeque<>();
+        dfs(rooms, 0, canEnterRoom);
 
-        queue.offer(0);
-
-        while (!queue.isEmpty()) {
-            int room = queue.poll();
-            roomsVisited[room] = true;
-
-            List<Integer> keys = rooms.get(room);
-
-            for (int key : keys) {
-                if(!roomsVisited[key]) {
-                    roomsVisited[key] = true;
-                    queue.offer(key);
-                }
-            }
-        }
-
-
-        return hasAllRoomsVisited(roomsVisited);
-    }
-
-    private boolean hasAllRoomsVisited(boolean[] roomsVisited) {
-        for (boolean room : roomsVisited) {
-            if (!room)
-                return false;
+        for (int i = 0; i < size; i++) {
+            if (!canEnterRoom[i]) return false;
         }
         return true;
+    }
+
+    private void dfs(List<List<Integer>> rooms, int current, boolean[] visited) {
+        visited[current] = true;
+        for (int room : rooms.get(current)) {
+            if (!visited[room]) {
+                dfs(rooms, room, visited);
+            }
+        }
     }
 }
