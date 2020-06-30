@@ -1,9 +1,9 @@
 import java.util.*;
 
 // 212 https://leetcode.com/problems/word-search-ii/
-public class WordSearch {
+public class WordSearch2 {
     public static void main(String[] args) {
-        WordSearch obj = new WordSearch();
+        WordSearch2 obj = new WordSearch2();
         char[][] board = new char[][]{
                 {'o', 'a', 'a', 'n'},
                 {'e', 't', 'a', 'e'},
@@ -17,6 +17,74 @@ public class WordSearch {
 
     }
 
+    //Trie Solution
+    public List<String> findWords(char[][] board, String[] words) {
+        TrieNode root = buildTrieNode(words);
+        List<String> res = new ArrayList<>();
+
+        int rows = board.length;
+        if (rows == 0) return res;
+        int cols = board[0].length;
+
+
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; col++) {
+                dfs(board, root, row, col, res);
+            }
+        }
+
+        return res;
+    }
+
+
+    private void dfs(char[][] board, TrieNode root, int row, int col, List<String> res) {
+        if (row < 0 || row >= board.length) return;
+        if (col < 0 || col >= board[0].length) return;
+        if(board[row][col] == '#') return;
+
+        char c = board[row][col];
+        int index = c - 'a';
+        if (root.children[index] == null) return;
+        root = root.children[index];
+
+        if (root.word != null) {
+            res.add(root.word);
+            root.word = null;
+        }
+
+        board[row][col] = '#';
+
+        dfs(board, root, row + 1, col, res);
+        dfs(board, root, row - 1, col, res);
+        dfs(board, root, row, col + 1, res);
+        dfs(board, root, row, col - 1, res);
+
+        board[row][col] = c;
+    }
+
+    private TrieNode buildTrieNode(String[] words) {
+        TrieNode root = new TrieNode();
+
+        for (String word : words) {
+            TrieNode node = root;
+            for (char c : word.toCharArray()) {
+                int idx = c - 'a';
+                if (node.children[idx] == null) {
+                    node.children[idx] = new TrieNode();
+                }
+                node = node.children[idx];
+            }
+            node.word = word;
+        }
+        return root;
+    }
+
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        String word;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Backtracking solution
@@ -24,7 +92,7 @@ public class WordSearch {
      * @param words
      * @return
      */
-    public List<String> findWords(char[][] board, String[] words) {
+    public List<String> findWords2(char[][] board, String[] words) {
         List<String> res = new ArrayList<>();
 
         for (String word : words) {
