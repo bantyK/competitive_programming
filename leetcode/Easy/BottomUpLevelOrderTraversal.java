@@ -25,8 +25,9 @@ public class BottomUpLevelOrderTraversal {
         }
     }
 
+    // BFS
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
+        LinkedList<List<Integer>> res = new LinkedList<>();
         Queue<TreeNode> queue = new ArrayDeque<>();
         if (root == null) return null;
         queue.offer(root);
@@ -42,9 +43,33 @@ public class BottomUpLevelOrderTraversal {
                 if (current.right != null) queue.offer(current.right);
             }
 
-            res.add(0, list);
+            res.addFirst(list);
         }
 
         return res;
+    }
+
+    //DFS
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        if (root == null) return res;
+        Map<Integer, List<Integer>> levelMap = new TreeMap<>();
+        dfs(root, 0, levelMap);
+
+        for (int key : levelMap.keySet()) {
+            res.addFirst(levelMap.get(key));
+        }
+
+        return res;
+    }
+
+    private void dfs(TreeNode root, int level, Map<Integer, List<Integer>> levelMap) {
+        if (root == null) return;
+
+        levelMap.putIfAbsent(level, new ArrayList<>());
+        levelMap.get(level).add(root.val);
+
+        dfs(root.left, level + 1, levelMap);
+        dfs(root.right, level + 1, levelMap);
     }
 }
