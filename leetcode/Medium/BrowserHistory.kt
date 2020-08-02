@@ -42,6 +42,47 @@ class BrowserHistory(homepage: String) {
     }
 }
 
+///// Solution using DLL /////
+// class BrowserHistory(homepage: String) {
+//     private val head: Node
+//     private var current: Node
+
+//     init {
+//         head = Node(homepage)
+//         current = head
+
+//     }
+
+//     fun visit(url: String) {
+//         val node = Node(url)
+//         current.next = node
+//         node.prev = current
+//         current = node
+//     }
+
+//     fun back(steps: Int): String {
+//         var i = steps
+//         while(current.prev != null && i-- > 0) {
+//             current = current.prev!!
+//         }
+//         return current.url
+
+//     }
+
+//     fun forward(steps: Int): String {
+//         var i = steps
+//         while(current.next != null && i-- > 0) {
+//             current = current.next!!
+//         }
+//         return current.url
+//     }
+
+//     class Node(val url:String) {
+//         var prev : Node? = null
+//         var next : Node? = null
+//     }
+// }
+
 fun main() {
     val browserHistory = BrowserHistory("a")
     browserHistory.visit("b")
@@ -54,7 +95,6 @@ fun main() {
     println(browserHistory.forward(2))
     println(browserHistory.back(2))
     println(browserHistory.back(7))
-
 }
 
 /*
