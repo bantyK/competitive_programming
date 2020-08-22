@@ -10,50 +10,54 @@ public class WordBreak {
         System.out.println(obj.wordBreakBFS("aaaaaaa", Arrays.asList("aaaa", "aaa")));
     }
 
-    private boolean wordBreak(String s, List<String> words) {
-        return wordBreakHelper(s, words, 0);
-    }
+    //Top Down
+    fun wordBreak(s: String, words: List<String>): Boolean {
+    	val cache = HashMap<Int, Boolean>()
+    	return helper(s, words, 0, cache)
+	}
 
-    private boolean wordBreakHelper(String s, List<String> words, int startIndex) {
-        if (s.length() == startIndex) return true;
+	private fun helper(s: String, words: List<String>, strIndex: Int, cache: HashMap<Int, Boolean>): Boolean {
+	    if (strIndex >= s.length) return true
 
-        for (String word : words) {
-            int len = word.length();
-            int endIndex = startIndex + len;
+	    cache[strIndex]?.let {
+	        return it
+	    }
 
-            if (endIndex > s.length()) continue;
+	    for (word in words) {
+	        val currentWordLen = word.length
+	        val endIndex = strIndex + currentWordLen
 
-            if (s.substring(startIndex, endIndex).equals(word)) {
-                if (wordBreakHelper(s, words, startIndex + len)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	        if (endIndex > s.length) continue
 
-    private boolean wordBreak2(String s, List<String> words) {
-        boolean[] canSegment = new boolean[s.length() + 1];
-        canSegment[0] = true;
+	        if (s.substring(strIndex, endIndex) == word) {
+	            val result = helper(s, words, endIndex, cache)
+	            if (result) {
+	                cache[strIndex] = true
+	                return true
+	            }
+	        }
+	    }
+	    cache[strIndex] = false
+	    return false
+	}
 
-        for (int i = 0; i < s.length(); i++) {
-            if (!canSegment[i]) continue;
-
-            for (String word : words) {
-                int len = word.length();
-                int endIndex = i + len;
-
-                if (endIndex > s.length()) continue;
-
-                if (canSegment[endIndex]) continue;
-
-                if (s.substring(i, endIndex).equals(word)) {
-                    canSegment[endIndex] = true;
-                }
-            }
-        }
-        return canSegment[s.length()];
-    }
+	// Bottom up
+	fun wordBreakBottomUp(s: String, words: List<String>): Boolean {
+	    // dp[i] represent the question can be form the word ending at i using the words given in dictionary
+	    val dp = BooleanArray(s.length + 1)
+	    dp[0] = true
+	    val set = HashSet<String>(words)
+	    for (i in 1..s.length) {
+	        for (j in 0 until i) {
+	            val word = s.substring(j, i)
+	            if (dp[j] && set.contains(word)) {
+	                dp[i] = true
+	            }
+	        }
+	    }
+	    println(dp.contentToString())
+	    return dp[s.length]
+	}
 
     // BFS solution
     public boolean wordBreakBFS(String s, List<String> wordDict) {
