@@ -3,6 +3,51 @@ import java.util.*;
 // 1305 https://leetcode.com/problems/all-elements-in-two-binary-search-trees/
 public class AllElements2BST {
 
+	// Using stack 
+	 public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        Stack<TreeNode> stack1 = new Stack<>();
+        Stack<TreeNode> stack2 = new Stack<>();
+        List<Integer> res = new ArrayList<>();
+        populateStack(stack1, root1);
+        populateStack(stack2, root2);
+
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            TreeNode node1 = stack1.peek();
+            TreeNode node2 = stack2.peek();
+            if (node1.val > node2.val) {
+                TreeNode node = stack2.pop();
+                res.add(node.val);
+                populateStack(stack2, node.right);
+            } else {
+                TreeNode node = stack1.pop();
+                res.add(node.val);
+                populateStack(stack1, node.right);
+            }
+        }
+
+        while (!stack1.isEmpty()) {
+            TreeNode node = stack1.pop();
+            res.add(node.val);
+            populateStack(stack1, node.right);
+        }
+
+        while (!stack2.isEmpty()) {
+            TreeNode node = stack2.pop();
+            res.add(node.val);
+            populateStack(stack2, node);
+        }
+
+        return res;
+    }
+
+
+    private void populateStack(Stack<TreeNode> stack, TreeNode root) {
+        if (root == null) return;
+        stack.push(root);
+        populateStack(stack, root.left);
+    }
+
+
     /**
      * Brute Force
      *
