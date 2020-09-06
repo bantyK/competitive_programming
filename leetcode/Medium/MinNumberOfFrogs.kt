@@ -1,3 +1,5 @@
+import java.util.HashMap
+
 // 1419 https://leetcode.com/problems/minimum-number-of-frogs-croaking/
 fun minNumberOfFrogs(croakOfFrogs: String): Int {
     val count = IntArray(5)
@@ -32,6 +34,64 @@ fun minNumberOfFrogs(croakOfFrogs: String): Int {
     // completely and the string ended, hence it is an invalid input. return -1
     return if (currentFrog != 0) -1 else maxFrog
 }
+
+fun minNumberOfFrogsUsingStateMachine(croakOfFrogs: String): Int {
+    val states: MutableMap<Int, Int> = HashMap()
+    var res = 0
+    for (i in 0..5) {
+        states[i] = 0
+    }
+    for (element in croakOfFrogs) {
+        val c = element
+        if (c == 'c') {
+            states[1] = states[1]!! + 1
+        } else if (c == 'r') {
+            if (states[1]!! > 0) {
+                states[1] = states[1]!! - 1
+                states[2] = states[2]!! + 1
+            } else {
+                return -1
+            }
+        } else if (c == 'o') {
+            if (states[2]!! > 0) {
+                states[2] = states[2]!! - 1
+                states[3] = states[3]!! + 1
+            } else {
+                return -1
+            }
+        } else if (c == 'a') {
+            if (states[3]!! > 0) {
+                states[3] = states[3]!! - 1
+                states[4] = states[4]!! + 1
+            } else {
+                return -1
+            }
+        } else if (c == 'k') {
+            if (states[4]!! > 0) {
+                states[4] = states[4]!! - 1
+                states[5] = states[5]!! + 1
+            } else {
+                return -1
+            }
+        }
+        res = Math.max(res, getSum(states))
+    }
+    for (i in 0..4) {
+        if (states[i] != 0) {
+            return -1
+        }
+    }
+    return res
+}
+
+private fun getSum(states: Map<Int, Int>): Int {
+    var sum = 0
+    for (k in states.keys) {
+        sum += states[k] ?: 0
+    }
+    return sum
+}
+
 
 fun main() {
     println(minNumberOfFrogs("crcoakroak"))
