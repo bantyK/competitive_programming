@@ -54,6 +54,28 @@ public class MaximumScore {
         int fromRight = helper(nums, k - 1, start, end - 1, sum + nums[end], dp);
         return Math.max(fromLeft, fromRight);
     }
+	
+	/* Bottom UP DP solution */
+    // Dynamic programming
+    public int maxScoreDP(int[] nums, int k) {
+       int[] leftDp = new int[k + 1];
+       int[] rightDp = new int[k + 1];
+       int len = nums.length;
+       for (int i = 1; i <= k; i++) {
+           leftDp[i] = leftDp[i - 1] + nums[i - 1];
+           rightDp[i] = rightDp[i - 1] + nums[len - i];
+       }
+
+       int maxSum = 0;
+
+       // emulating taking elements from left and right
+       for(int i = 0; i <= k; i++) {
+           maxSum = Math.max(maxSum, leftDp[i] + rightDp[k-i]);
+       }
+
+       return maxSum;
+   }
+	
 
 
 }
