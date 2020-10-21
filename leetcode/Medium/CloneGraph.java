@@ -6,6 +6,7 @@ public class CloneGraph {
         CloneGraph obj = new CloneGraph();
     }
 
+    // BFS implementation
     public Node cloneGraph(Node node) {
 
         Map<Node, Node> cloneMap = new HashMap<>();
@@ -26,6 +27,23 @@ public class CloneGraph {
 
             }
 
+        }
+
+        return cloneMap.get(node);
+    }
+
+	// DFS implementation
+    private Node dfs(Node node, Map<Node, Node> cloneMap) {
+        if (node == null) return null;
+
+        if (cloneMap.containsKey(node)) return cloneMap.get(node);
+
+        Node cloned = new Node(node.val);
+        cloneMap.put(node, cloned);
+
+        for (Node neigh : node.neighbors) {
+            Node clonedNeighbor = dfs(neigh, cloneMap);
+            cloned.neighbors.add(clonedNeighbor);
         }
 
         return cloneMap.get(node);
