@@ -9,6 +9,32 @@ public class LetterCasePermutation {
         System.out.println(obj.letterCasePermutation3("abcdEf"));
     }
 
+    public List<String> letterCasePermutationOptimised(String S) {
+        List<String> results = new ArrayList<>();
+        solve(S, 0, results, new StringBuilder());
+        return results;
+    }
+
+    private void solve(String s, int index, List<String> results, StringBuilder builder) {
+        if (index == s.length()) {
+            results.add(builder.toString());
+            return;
+        }
+
+        char ch = s.charAt(index);
+        if (Character.isDigit(ch)) {
+            builder.append(ch);
+            solve(s, index + 1, results, builder);
+            builder.deleteCharAt(builder.length() - 1);
+        } else {
+            builder.append(ch);
+            solve(s, index + 1, results, builder);
+            builder.deleteCharAt(builder.length() - 1);
+            builder.append(Character.isLowerCase(ch) ? Character.toUpperCase(ch)  : Character.toLowerCase(ch));
+            solve(s, index + 1, results, builder);
+            builder.deleteCharAt(builder.length() - 1);
+        }
+    }
 
     // DFS
     public List<String> letterCasePermutation3(String s) {
