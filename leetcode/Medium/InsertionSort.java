@@ -39,49 +39,57 @@ public class InsertionSort {
         }
     }
 
-    public ListNode insertionSortList(ListNode head) {
-        if (head == null || head.next == null) return head;
+    // convert the list into array, sort the list and then convert back to list
+	public ListNode insertionSortList(ListNode head) {
+	        List<Integer> values = new ArrayList<>();
+	        getNodeValues(head, values);
+	        values.sort((i1, i2) -> i1 - i2);
+	        return buildNode(values);
+	    }
+    
+	    private void getNodeValues(ListNode head, List<Integer> values) {
+	        if(head == null) return;
+	        values.add(head.val);
+	        getNodeValues(head.next, values);
+	    }
+    
+	    private ListNode buildNode(List<Integer> values) {
+	        int index = 0;
+	        ListNode head = null;
+	        ListNode tail = null;
+        
+	        for(int i = 0; i < values.size(); i++) {
+	            if(tail == null) {
+	                head = new ListNode(values.get(i));
+	                tail = head;
+	            } else {
+	                tail.next = new ListNode(values.get(i));
+	                tail = tail.next;
+	            }
+	        }
+        
+	        return head;
+	    } 
+		
+		// in-place insertion sort
+		
+		public ListNode insertionSortList(ListNode head) {
+		        ListNode curr = head, next = null;
+		        ListNode fake = new ListNode(0);
 
-        ListNode ptr = head.next;
-        while (ptr != null) {
-            ListNode node = head;
-            ListNode prev = node;
-            while (node.val < ptr.val && node != ptr) {
-                prev = node;
-                node = node.next;
-            }
-            if (node == ptr) {
-                ptr = ptr.next;
-                continue;
-            }
-            ListNode temp = ptr;
-            ptr = ptr.next;
-            ListNode x = head;
-            while (x.next != temp) {
-                x = x.next;
-            }
+		        while (curr != null) {
+		            next = curr.next;
 
-            if (node == head) {
-                x.next = ptr;
-                temp.next = head;
-                head = temp;
-            } else {
-                prev.next = temp;
-                x.next = temp.next;
-                temp.next = node;
-            }
-        }
+		            ListNode p = fake;
+		            while (p.next != null && p.next.val < curr.val) {
+		                p = p.next;
+		            }
+		            curr.next = p.next;
+		            p.next = curr;
 
-        return head;
-
-    }
-
-    private static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
+		            curr = next;
+		        }
+		        return fake.next;
+		    }
+    
 }
