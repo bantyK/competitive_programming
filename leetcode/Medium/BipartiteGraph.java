@@ -1,12 +1,13 @@
+// 785 https://leetcode.com/problems/is-graph-bipartite/
 public class BipartiteGraph {
 	public boolean isBipartite(int[][] adj) {
-        	Map<Integer, List<Integer>> graph = new HashMap<>();
-	        int numVertex = adj.length;
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+	    int numVertex = adj.length;
        	 
-        	for(int i = 0; i < numVertex; i++) graph.put(i, new ArrayList<>());
+       	for(int i = 0; i < numVertex; i++) graph.put(i, new ArrayList<>());
         
-	        for(int i = 0; i < adj.length; i++) {
-        	    for(int edge: adj[i]) {
+	    for(int i = 0; i < adj.length; i++) {
+        	for(int edge: adj[i]) {
                 graph.get(i).add(edge);
                 graph.get(edge).add(i);
             }
