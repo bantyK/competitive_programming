@@ -24,43 +24,40 @@ public class MaximumDifferenceNodeAncestor {
         root.right.right = new TreeNode(14);
         root.right.right.left = new TreeNode(13);
 
-        System.out.println(
-                obj.maxAncestorDiff(root)
-        );
+        System.out.println(obj.maxAncestorDiff(root));
 
     }
 
-    int max = 0;
-
+    private int max;
+    
     public int maxAncestorDiff(TreeNode root) {
         if (root == null) return 0;
-        helper(root);
+        max = Integer.MIN_VALUE;
+
+        helper(root, root.val, root.val);
         return max;
     }
 
-    private List<TreeNode> helper(TreeNode root) {
-        List<TreeNode> temp = new ArrayList<>();
-        if (root == null) return temp;
 
-        if (root.left == null && root.right == null) {
-            temp.add(root);
-            return temp;
+    // Have to pass max and min both because we are interested in absolute difference.
+    // There could be a case where the top levels have higher values and lower level have lower values, in this case we need to pass the maximum
+    // in cases where top level have lower values and low level have higher values, in this case we need the min values from top
+    private void helper(TreeNode root, int maxSoFar, int minSoFar) {
+        if (root == null) return;
+        int diffMax = Math.abs(root.val - maxSoFar);
+        if (diffMax > max) {
+            max = diffMax;
         }
-
-        List<TreeNode> left = helper(root.left);
-        List<TreeNode> right = helper(root.right);
-
-        for (TreeNode node : left) {
-            max = Math.max(max, Math.abs(node.val - root.val));
+        
+        int diffMin = Math.abs(root.val - minSoFar);
+        if (diffMin > max) {
+            max = diffMin;
         }
-
-        for (TreeNode node : right) {
-            max = Math.max(max, Math.abs(node.val - root.val));
-        }
-
-        temp.add(root);
-        temp.addAll(left);
-        temp.addAll(right);
-        return temp;
+        
+        maxSoFar = Math.max(maxSoFar, root.val);
+        minSoFar = Math.min(minSoFar, root.val);
+        
+        helper(root.left, maxSoFar,minSoFar);
+        helper(root.right, maxSoFar,minSoFar);
     }
 }
