@@ -2,30 +2,33 @@ import java.util.*;
 // 682 https://leetcode.com/problems/baseball-game/
 public class BaseballGame {
     public int calPoints(String[] ops) {
-        List<Integer> points = new ArrayList<>();
-        
+        Stack<Integer> stack = new Stack<>();
         for(String op : ops) {
             switch(op) {
+                case "C":
+                    stack.pop();
+                    break;
                 case "+":
-                    if(points.size() < 2) { return 0; }
-                    int last = points.get(points.size()-1);
-                    int secondLast = points.get(points.size()-2);
-                    points.add(last+secondLast);
+                    int first = stack.pop();
+                    int second = stack.pop();
+                    int sum = first + second;
+                    stack.push(second);
+                    stack.push(first);
+                    stack.push(sum);
                     break;
                 case "D":
-                    points.add(2 * points.get(points.size() - 1));
-                    break;
-                case "C":
-                    points.remove(points.get(points.size() - 1));
+                    stack.push(stack.peek() * 2);
                     break;
                 default:
-                    points.add(Integer.parseInt(op));
+                    stack.push(Integer.parseInt(op));
                     break;
             }
         }
         
         int sum = 0;
-        for(int i : points) sum += i;
+        while(!stack.isEmpty()) {
+            sum += stack.pop();
+        }
         return sum;
     }
 }
