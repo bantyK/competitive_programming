@@ -1,50 +1,32 @@
-package com.company.leet;
-
 import java.util.Arrays;
 
+//977 https://leetcode.com/problems/squares-of-a-sorted-array/
 public class SortedSquares {
-
     public static void main(String[] args) {
-        int[] A = new int[]{-10, -9, -8, -7, -6, 0, 1, 2, 3};
-        System.out.println(Arrays.toString(sortedSquares(A)));
+        System.out.println(Arrays.toString(new SortedSquares().sortedSquares(new int[]{-3, -2, -1, 1, 2, 3})));
     }
 
-    private static int[] sortedSquares(int[] A) {
-        int startNegIndex = 0;
-        int endNegIndex = 0;
-        int temp;
+    public int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int[] squares = new int[n];
 
-        for (int i = 0; i < A.length; i++) {
-            if (A[i] > 0) {
-                endNegIndex = i - 1;
-                break;
+        int left = 0;
+        int right = n - 1;
+        int resIdx = n - 1;
+
+        while (left <= right) {
+            int squareLeft = nums[left] * nums[left];
+            int squareRight = nums[right] * nums[right];
+
+            if (squareLeft > squareRight) {
+                squares[resIdx--] = squareLeft;
+                left++;
+            } else {
+                squares[resIdx--] = squareRight;
+                right--;
             }
         }
 
-        while (startNegIndex <= endNegIndex) {
-            temp = A[startNegIndex];
-            A[startNegIndex] = A[endNegIndex];
-            A[endNegIndex] = temp;
-
-            startNegIndex++;
-            endNegIndex--;
-        }
-
-        return A;
-    }
-
-    private static int[] sortedSquares1(int[] A) {
-        for (int i = 0; i < A.length; i++) {
-            if (A[i] < 0)
-                A[i] *= -1;
-        }
-
-        Arrays.sort(A);
-
-        for (int i = 0; i < A.length; i++) {
-            A[i] *= A[i];
-        }
-
-        return A;
+        return squares;
     }
 }
