@@ -14,36 +14,43 @@ public class ThreeSum {
 
     public List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
-       
+        int n = nums.length;
         List<List<Integer>> res = new ArrayList<>();
 
-        int target;
-        int left, right, sum, prevLeftVal, prevIVal;
-        for (int i = 0; i < nums.length-2; i++) {
-            target = -nums[i];
-            left = i + 1;
-            right = nums.length - 1;
-            prevIVal = nums[i];
+        for (int i = 0; i < n - 2; ) {
+            int firstNum = nums[i];
+
+            int left = i + 1;
+            int right = n - 1;
+            int requiredSum = -firstNum;
+
             while (left < right) {
-                sum = nums[left] + nums[right];
-                if (sum == target) {
-                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
-                    prevLeftVal = nums[left];
-                    while(left < right && nums[left] == prevLeftVal) {
-                        left++;
+                int sum = nums[left] + nums[right];
+                if (sum == requiredSum) {
+                    res.add(Arrays.asList(firstNum, nums[left], nums[right]));
+                    int rightNum = nums[right];
+                    // avoid infinite loops if a combination is already found
+                    while (right >= 0 && nums[right] == rightNum) {
+                        --right;
                     }
-                } else if(sum > target) {
+                    int leftNum = nums[left];
+                    while (left < n && nums[left] == leftNum) {
+                        ++left;
+                    }
+
+                } else if (sum > requiredSum) {
                     right--;
                 } else {
                     left++;
                 }
             }
-            while(i < nums.length-1 && prevIVal == nums[i+1]) {
+            // Avoid dups
+            while(i < n && nums[i] == firstNum) {
                 i++;
             }
         }
 
         return res;
     }
- 	   
+
 }
