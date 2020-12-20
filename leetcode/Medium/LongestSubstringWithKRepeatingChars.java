@@ -7,48 +7,70 @@ public class LongestSubstringWithKRepeatingChars {
     }
 
     public int longestSubstring(String s, int k) {
-        return helper(s, 0, s.length() - 1, k);
+        return helper(s, 0, s.length(), k);
     }
 
-    private int helper(String s, int low, int high, int k) {
-        if (high - low + 1 < k) {
-            // if the string itself has less than k characters, then it is not possible to
-            // make a valid string
-            return 0;
+    private int helper(String s, int start, int end, int k) {
+
+        /**
+         * Base Case 1 of 2:
+         *
+         * If this substring is shorter than k, then no characters in it
+         * can be repeated k times, therefore this substring and all
+         * substrings that could be formed from it are invalid,
+         * therefore return 0.
+         */
+        if (end - start < k) return 0;
+
+        /**
+         * Count the frequency of characters in this substring.
+         *
+         * We are guaranteed from the problem statement that the given String
+         * can only contain lowercase (English?) characters, so we use a
+         * table of length 26 to store the character counts.
+         */
+        int[] a = new int[26];
+        for (int i = start; i < end; i++) {
+            a[s.charAt(i)-'a']++;
         }
 
-        // count of all characters in the string
-        int[] charFrequency = new int[26];
-        for (int i = low; i <= high; i++) {
-            charFrequency[s.charAt(i) - 'a']++;
-        }
+        // For every character in the above frequency table
+        for (int i = 0; i < a.length; i++){
 
-        int left = low;
-        int maxLen = 0;
+            /**
+             * If this character occurs at least once, but fewer than k times
+             * in this substring, we know:
+             * (1) this character cannot be part of the longest valid substring,
+             * (2) the current substring is not valid.
+             *
+             * Hence, we will "split" this substring on this character,
+             * wherever it occurs, and check the substrings formed by that split
+             */
+            if (a[i] > 0 && a[i] < k) {
 
-        for (int right = low; right <= high; right++) {
-            if (charFrequency[s.charAt(right) - 'a'] < k) {
-                // if the frequency of a char is less than k, then that cannot be the part of
-                // a valid substring.
-                // It divides the string into 2 parts (left and right). We will look for valid substrings at both side
-                // we dont know how many substrings are present in the right part but for the left
-                // part, we know  that it is between i and j - 1. (char At j can't be the part of it)
+                /**
+                 * Look for each occurrence of this character (i + 'a')
+                 * in this substring.
+                 */
+                for (int j = start; j < end; j++) {
+                    if (s.charAt(j) == i + 'a') {
 
-                int len = helper(s, left, right - 1, k);
-                maxLen = Math.max(maxLen, len);
-                left = right + 1; // j cant be a part of a valid substring, to skipping it
+                        // "Split" into two substrings to solve recursively
+                        int left = helper(s, start, j, k);
+                        int right = helper(s, j + 1, end, k);
+                        return Math.max(left, right);
+                    }
+                }
             }
         }
 
-        if (left == low) {
-            //If even after the for loop, the value of left remains unchanged then it means there are
-            // no char in the string with freq less than k, meaning the entire string is a valid string
-            return high - low + 1;
-        }
-
-        // we have to again call the helper because the low and left might be different and a
-        // last segment might remain which we need to count consider the ex: bbaaac
-        return Math.max(maxLen, helper(s, left, high, k));
+        /**
+         * Base Case 2 of 2:
+         *
+         * If every character in this substring occurs at least k times,
+         * then this is a valid substring, so return this substring's length.
+         */
+        return end - start;
     }
 
 
