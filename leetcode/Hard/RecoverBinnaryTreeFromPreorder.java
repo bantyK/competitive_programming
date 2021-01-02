@@ -1,11 +1,11 @@
 import java.util.*;
 
 import input.TreeNode;
-
+// https://www.youtube.com/watch?v=ode-KaFYHYk
 //1028 https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/
-public class RecoverBinaryTree {
+public class RecoverBinnaryTreeFromPreorder {
     public static void main(String[] args) {
-        RecoverBinaryTree obj = new RecoverBinaryTree();
+        RecoverBinnaryTreeFromPreorder obj = new RecoverBinnaryTreeFromPreorder();
         // TreeNode res = obj.recoverFromPreorder("5-4--4");
         TreeNode res = obj.recoverFromPreorder("3");
         System.out.println(res);
