@@ -1,70 +1,77 @@
 import java.util.*;
 
-// 269 https://leetcode.com/problems/alien-dictionary
+// 269 https://leetcode.com/problems/alien-dictionary/
 public class AlienDictionary {
     public static void main(String[] args) {
         AlienDictionary obj = new AlienDictionary();
-        System.out.println(obj.alienOrder(new String[]{"wrt","wrf","er","ett","rtff"}));
+        // System.out.println(obj.alienOrder(new String[] { "wrt", "wrf", "er", "ett",
+        // "rftt" }));
+        System.out.println(obj.alienOrder(new String[] { "ac", "ab", "zc", "zb" }));
     }
 
     public String alienOrder(String[] words) {
-        boolean[][] graph = new boolean[26][26];
-        int[] visited = new int[26];
-        Arrays.fill(visited, -1);
+        Map<Character, List<Character>> adjList = new HashMap<>();
+        Map<Character, Integer> indegreeMap = new HashMap<>();
 
+        // init the data structures
         for (String word : words) {
             for (char c : word.toCharArray()) {
-                visited[c - 'a'] = 0;
+                indegreeMap.put(c, 0);
+                adjList.putIfAbsent(c, new ArrayList<>());
             }
         }
-        buildGraph(words, graph);
 
+        // create a graph to represent the relationships between characters
+        for (int i = 0; i < words.length - 1; i++) {
+            String word1 = words[i];
+            String word2 = words[i + 1];
+
+            // if word2 is the prefix of word1, then we cannot derive any useful information
+            // about letter ordering, and this is an invalid input
+            if (word1.length() > word2.length() && word1.startsWith(word2)) {
+                return "";
+            }
+
+            // Find the first non-matching character. Because thats the point which is
+            // useful for finding the
+            // character ordering, characters after the unmatched character have no role in
+            // finding the
+            // relative ordering of characters
+            for (int j = 0; j < Math.min(word1.length(), word2.length()); j++) {
+                if (word1.charAt(j) != word2.charAt(j)) {
+                    adjList.get(word1.charAt(j)).add(word2.charAt(j));
+                    indegreeMap.put(word2.charAt(j), indegreeMap.get(word2.charAt(j)) + 1);
+                    break; // important, no need to move ahead in the words
+                }
+            }
+        }
+
+        // graph is ready, we will start the BFS from here
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 26; i++) {
-            if (visited[i] == 0) {
-                // not visited yet
-                if (!dfs(graph, visited, builder, i)) {
-                    return "";
-                }
-            }
-        }
-        return builder.reverse().toString();
-    }
+        Queue<Character> queue = new LinkedList<>();
 
-    private boolean dfs(boolean[][] graph, int[] visited, StringBuilder builder, int i) {
-        visited[i] = 1; // visiting
-        for (int j = 0; j < 26; j++) {
-            if (graph[i][j]) {
-                if (visited[j] == 1) {
-                    return false;
-                }
-
-                if (visited[j] == 0) {
-                    if (!dfs(graph, visited, builder, j)) return false;
-                }
+        for (char c : indegreeMap.keySet()) {
+            if (indegreeMap.get(c) == 0) {
+                queue.offer(c);
             }
         }
 
-        visited[i] = 2; // visited
-        builder.append((char)(i + 'a'));
-        return true;
-    }
+        while (!queue.isEmpty()) {
+            char c = queue.poll();
+            builder.append(c);
 
-    private void buildGraph(String[] words, boolean[][] graph) {
-        for (int i = 1; i < words.length; i++) {
-            String w1 = words[i - 1];
-            String w2 = words[i];
-
-            int len = Math.min(w1.length(), w2.length());
-
-            for (int j = 0; j < len; j++) {
-                char c1 = w1.charAt(j);
-                char c2 = w2.charAt(j);
-
-                if (c1 != c2) {
-                    graph[c1 - 'a'][c2 - 'a'] = true;
+            for (char next : adjList.get(c)) {
+                indegreeMap.put(next, indegreeMap.get(next) - 1);
+                if (indegreeMap.get(next) == 0) {
+                    queue.offer(next);
                 }
             }
         }
+        if (builder.length() < indegreeMap.size()) {
+            // we are not able to determine the ordering of all characters in the input.
+            return "";
+        }
+
+        return builder.toString();
     }
 }
