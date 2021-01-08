@@ -47,4 +47,26 @@ public class NumWaysToPrintGrid {
         }
         return dp[n][a0][b0][c0] = ans;
     }
+
+    // Optimised solution: Constant space
+    public int numOfWays2(int n) {
+        int MOD = 1000000007;
+        // with n = 1(one row), there be total 12 combinations
+        // out of these 6 will have 2 colors
+        // and 6 will have 3 colors
+        long twoColors = 6L;
+        long threeColors = 6L;
+        
+        for(int i = 2; i <= n; i++) {
+            // these are arrangements for the row above the current row
+            long oldTwoColorArrangementCount = twoColors;
+            long oldThreeColorArrangementCount = threeColors;
+            
+            twoColors =(3 * oldTwoColorArrangementCount + 2 * oldThreeColorArrangementCount) % MOD;
+			threeColors =(2 * oldTwoColorArrangementCount + 2 * oldThreeColorArrangementCount) % MOD;
+        }
+        
+        return (int)((twoColors + threeColors) % MOD);
+    }
+}
 }
