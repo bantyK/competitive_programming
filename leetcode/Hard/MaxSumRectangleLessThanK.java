@@ -1,5 +1,7 @@
 //363 https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/
 
+import java.util.TreeSet;
+
 public class MaxSumRectangleLessThanK {
     public static void main(String[] args) {
         MaxSumRectangleLessThanK obj = new MaxSumRectangleLessThanK();
@@ -21,11 +23,9 @@ public class MaxSumRectangleLessThanK {
         System.out.println(obj.maxSumSubmatrix(matrix3, 8) == 8);
     }
 
-
-    public int maxSumSubmatrix(int[][] matrix, int k) {
+    public int maxSumSubmatrix1(int[][] matrix, int k) {
         int rows = matrix.length;
-        if (rows == 0)
-            return 0;
+        if (rows == 0) return 0;
         int cols = matrix[0].length;
         if (cols == 0)
             return 0;
@@ -77,6 +77,71 @@ public class MaxSumRectangleLessThanK {
         return res;
     }
 
+    // Solution using tree set //
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        int res = Integer.MIN_VALUE;
+
+        for (int L = 0; L < cols; L++) {
+            int[] rowSum = new int[rows];
+
+            for (int R = L; R < cols; R++) {
+
+                for (int r = 0; r < rows; r++) {
+                    rowSum[r] += matrix[r][R];
+                }
+
+                res = Math.max(res, findMaxSum(rowSum, k));
+            }
+        }
+        return res;
+    }
+
+
+    // These are the helper functions which explain the concepts used to solve the problem
+    // This is a helper function which returns the largest sum less than equal to K
+
+    /**
+     * The subarray sum is sums[j] - sums[i]
+     * we need to maximize this.
+     * In order to maximize this value we need to minimize sums[i].
+     * But what is the minimum value of sums[i] that we can use ??
+     * In order to calculate this value, lets re-arrange this equation
+     * <p>
+     * sums[j] - sums[i] <= k
+     * -sums[i] <= k - sums[j]
+     * sums[i] >= sums[j] - k
+     * <p>
+     * So the we need to minimize sums[i], but is has to greater than sums[j] - k
+     * <p>
+     * Hence we are looking for the MINIMUM value of sums[i] such that it is GREATER than sums[j] - k
+     * This is what TreeMap.ceiling gives you.
+     */
+    private int findMaxSum(int[] nums, int k) {
+        TreeSet<Integer> set = new TreeSet<>();
+        set.add(0); // to handle the case when sum == k
+        int prefixSum = 0;
+        int maxSum = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            prefixSum += nums[i]; // this is the running sum, sums[j]
+
+            int diff = prefixSum - k;
+            Integer ceiling = set.ceiling(diff);
+
+            if (ceiling != null) {
+                // ceiling value is basically sums[i].
+                // we want the sum which is sums[j] - sums[i]
+                // therefore we are subtracting the two values
+                maxSum = Math.max(maxSum, prefixSum - ceiling);
+            }
+            set.add(prefixSum);
+        }
+        return maxSum;
+    }
+
     private int kadens(int[] nums, int max) {
         int n = nums.length;
         int[] dp = new int[n];
@@ -88,6 +153,4 @@ public class MaxSumRectangleLessThanK {
         }
         return dp[n - 1];
     }
-
-
 }
