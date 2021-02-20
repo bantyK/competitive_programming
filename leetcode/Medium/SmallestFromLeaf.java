@@ -16,7 +16,7 @@ public class SmallestFromLeaf {
     public String smallestFromLeaf(TreeNode root) {
         return dfs(root, "");
     }
-
++
     public String dfs(TreeNode node, String suffix) {
         if (null == node) {
             return suffix;
@@ -38,13 +38,3 @@ public class SmallestFromLeaf {
     }
 
 }
-
-/*
-[25,21,24,13,12,14,15,21,1,3,4,1,2,9,7]
-[0,null,1]
-[]
-[0]
-[2,2,1,null,1,0,null,0]
-[0,1,2,3,4,3,4]
-[25,1,3,1,3,0,2]
- */

@@ -21,7 +21,7 @@ public class EditDistance {
         // len1 and len2 represent the last characters of string1 and string2.
 	// we will start our comparison from the end of both strings.
  
-	if (len1 < 0) {
+		if (len1 < 0) {
             return len2 + 1;
         }
         if (len2 < 0) {
