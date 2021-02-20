@@ -1,63 +1,97 @@
 import java.util.*;
 
-//72 https://leetcode.com/problems/edit-distance/
 public class EditDistance {
+
     public static void main(String[] args) {
         EditDistance obj = new EditDistance();
-        System.out.println(obj.minDistance("A", "B"));
-        System.out.println(obj.minDistance("intention", "execution"));
         System.out.println(obj.minDistance("horse", "ros"));
+        System.out.println(obj.minDistance("intention", "execution"));
     }
 
     public int minDistance(String word1, String word2) {
-        if (word1 == null || word1.length() == 0) return word2.length();
-        if (word2 == null || word2.length() == 0) return word1.length();
-        Map<String, Integer> cache = new HashMap<>();
-        return match2(word1, word2, word1.length() - 1, word2.length() - 1, cache);
+        Integer[][] dp = new Integer[word1.length()][word2.length()];
+        return helper(word1, word2, word1.length() - 1, word2.length() - 1, dp);
+    }
+
+    // word1 needs to be converted to word2
+    private int helper(String word1, String word2, int index1, int index2, Integer[][] dp) {
+        // 2 bases which handles, if either of the 2 words, ends earlier than the other
+        // If they are of different length
+        if (index1 < 0) {
+            // We are exploring the words from end, so if index1 < 0 means -
+            // word1 has been finished, all the remaining characters of word2 needs to be
+            // inserted to make word1 equal to word2
+            return index2 + 1;
+        }
+
+        if (index2 < 0) {
+            // word2 has been completely explored, this means that all the remaining chars of
+            // word1 needs to be added into word1 to make it equal to word2
+            return index1 + 1;
+        }
+
+        // memoization
+        if (dp[index1][index2] != null) return dp[index1][index2];
+
+        if (word1.charAt(index1) == word2.charAt(index2)) {
+            // last chars of both the words are same, no need to do anything here.
+            // recurse to check the remaining strings
+            return helper(word1, word2, index1 - 1, index2 - 1, dp);
+        }
+
+        // chars are not same.
+        // 3 actions are possible. All these actions need to be taken into word1
+        // 1. Insertion
+        // 2. Deletion
+        // 3. Substitution
+
+        // A character is inserted at the end word1.
+        // This newly inserted char matches with the last char of word2.
+        // So, word2's index will decrease, but since we added into the word1, its length increases
+        // if we look at index, we still have to check the same index
+        int stepsWhenInserted = 1 + helper(word1, word2, index1, index2 - 1, dp);
+
+        // Last character is deleted from word1
+        int stepsWhenDeleted = 1 + helper(word1, word2, index1 - 1, index2, dp);
+
+        // Last character of word2 is substituted to make both chars equal
+        int stepsWhenSubstituted = 1 + helper(word1, word2, index1 - 1, index2 - 1, dp);
+
+        // Whichever of these options gives us the minimum result is our answer
+
+        return dp[index1][index2] = Math.min(stepsWhenDeleted, Math.min(stepsWhenInserted, stepsWhenSubstituted));
     }
 
 
-    private int match2(String s1, String s2, int len1, int len2, Map<String, Integer> cache) {
-        // len1 and len2 represent the last characters of string1 and string2.
-	// we will start our comparison from the end of both strings.
- 
-		if (len1 < 0) {
-            return len2 + 1;
-        }
-        if (len2 < 0) {
-            return len1 + 1;
-        }
-        String key = len1 + "" + len2;
+    // Bottom up solution of the above code
+    public int minDistanceBottomUp(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
 
-	// if we have already solved for the current values of len1 and len2, then we will have the solution stored in the cache. No need of any further calculation, simply return
-        if (cache.containsKey(key)) {
-            return cache.get(key);
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        // first row represent s1 is empty. We have to insert all chars from s2
+        for (int i = 0; i <= len2; i++) {
+            dp[0][i] = i;
         }
 
-        int res = 0;
-
-        if (s1.charAt(len1) == s2.charAt(len2)) {
-            res = match2(s1, s2, len1 - 1, len2 - 1, cache);
-        } else {
-            // we have added a character(the last char of string2) into string1, so the last chars of string1 and string2 are matching,
-            // we need to compare the rest of the string2 which is the entire string2 minus the last char(len2 - 1) and rest of the string1
-            // which is still len1 because a char is added at the end. So we won't subtract 1 from len1 (len1 - 1 + 1). +1 because a char is added
-            int insert = match2(s1, s2, len1, len2 - 1, cache);
-
-            // we have deleted a char from string1, so now we will match the rest of char1(which will be entire string1 minus last char) and
-            // all of char2
-            int delete = match2(s1, s2, len1 - 1, len2, cache);
-
-            // we will replace the char at string1 with string2. So both will be subtracted
-            int replace = match2(s1, s2, len1 - 1, len2 - 1, cache);
-
-            res = 1 + Math.min(Math.min(insert, replace), delete);
+        // first columnn represent s2 is Empty. We have to delete all chars from s1
+        for (int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
         }
 
-	// before returning the result, store it in the cache so as to use it later.
 
-        cache.put(key, res);
-        return res;
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j],
+                            Math.min(dp[i][j - 1], dp[i - 1][j - 1]));
+                }
+            }
+        }
+
+        return dp[len1][len2];
     }
-
 }
