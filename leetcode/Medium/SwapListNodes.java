@@ -19,6 +19,34 @@ public class SwapListNodes {
         System.out.println(res);
     }
 
+    // single pass solution, constant time
+
+    public ListNode swapNodes3(ListNode head, int k) {
+        if(head == null) return null;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        for(int i = 1; i < k; i++) {
+            fast = fast.next;
+        }
+
+        ListNode first = fast;
+        
+        while(fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        
+        ListNode last = slow;
+        
+        int temp = first.val;
+        first.val = last.val;
+        last.val = temp;
+        
+        return head;
+    }
+
     // single pass solution
     public ListNode swapNodes2(ListNode head, int k) {
         Stack<ListNode> stack = new Stack<>();
