@@ -24,24 +24,33 @@ public class FlattenBinaryTree {
     }
 
     public void flatten(TreeNode root) {
-        helper(root);
+        recurse(root);
     }
 
-    public TreeNode helper(TreeNode root) {
+    private TreeNode[] recurse(TreeNode root) {
         if (root == null) return null;
-        if(root.left == null && root.right == null) return root;
-        TreeNode left = helper(root.left);
-        TreeNode right = helper(root.right);
+        if (root.left == null && root.right == null) return new TreeNode[]{root, root};
+
+        TreeNode[] left = recurse(root.left);
+        TreeNode[] right = recurse(root.right);
 
         root.left = null;
-        TreeNode temp = right;
-        root.right = left;
-        TreeNode node = root;
-        while(node.right != null) {
-            node = node.right;
-        }
-        node.right = temp;
+        if (left != null) {
+            root.right = left[0];
+            if(right != null) {
+                left[1].right = right[0];
 
-        return root;
+                return new TreeNode[]{root, right[1]};
+            }
+
+            return new TreeNode[]{root, left[1]};
+        } else {
+            if(right == null) {
+                return new TreeNode[]{root, root};
+            } else {
+                root.right = right[0];
+                return new TreeNode[]{root, right[1]};
+            }
+        }
     }
 }
